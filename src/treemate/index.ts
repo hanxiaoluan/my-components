@@ -1,0 +1,1 @@
+export { TreeMate } from './treemate'

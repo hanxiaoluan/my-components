@@ -1,5 +1,5 @@
-import type { VNodeChild } from 'vue'
-
+import type { VNodeChild, Ref } from 'vue'
+import type { TreeNode } from '@/treemate/types'
 export type Key = string | number
 
 export interface TreeOption {
@@ -14,3 +14,10 @@ export interface TreeOption {
 }
 
 export type TreeOptions = TreeOption[]
+
+// export interface TreeNode<R = RawNode> {}
+export type TmNode = TreeNode<TreeOption>
+
+export interface TreeInjection {
+	indentRef: Ref<number>
+}

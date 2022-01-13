@@ -5,6 +5,8 @@ import TreeItem from './TreeItem'
 import type { VNode, InjectionKey } from 'vue'
 import type { TreeOptions, Key, TmNode, TreeInjection } from './types'
 
+import './styles/tree.scss'
+
 export const treeInjectKey: InjectionKey<TreeInjection> = Symbol('tree')
 const basicProps = {
 	data: {
@@ -37,7 +39,7 @@ export default defineComponent({
 	name: 'Tree',
 	props: basicProps,
 	setup(props) {
-		const clsPrefix = 'yao'
+		const clsPrefix = 'jade'
 		const getTreeMate = computed(() => new TreeMate(props.data))
 		console.log(getTreeMate.value)
 		const uncontrolledExpandedKeysRef = toRef(props, 'defaultExpandedKeys')
@@ -49,6 +51,7 @@ export default defineComponent({
 		const mergedFlattenNodesRef = computed(() => {
 			return getFlattenNodes.value
 		})
+
 		console.log(mergedFlattenNodesRef.value)
 
 		provide(treeInjectKey, {
@@ -60,7 +63,8 @@ export default defineComponent({
 		}
 	},
 	render() {
+		const treeClass = [`${this.clsPrefix}-tree`]
 		// TODO 虚拟滚动的判断
-		return <div>{this.fattenNodes.map((tmNode) => createNode(tmNode, this.clsPrefix))}</div>
+		return <div class={treeClass}>{this.fattenNodes.map((tmNode) => createNode(tmNode, this.clsPrefix))}</div>
 	}
 })

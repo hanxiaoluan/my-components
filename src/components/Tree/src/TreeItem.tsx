@@ -29,6 +29,7 @@ export default defineComponent({
 			<div class={`${clsPrefix}-tree-node-wrapper`}>
 				<div class={`${clsPrefix}-tree-node`}>
 					{repeat(tmNode.level, <div class={`${clsPrefix}-tree-node-indent`} style={{ flex: `0 0 ${indent}px` }} />)}
+					<div>{tmNode.rawNode.label}</div>
 				</div>
 			</div>
 		)

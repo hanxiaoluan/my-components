@@ -1,0 +1,25 @@
+$clsPrefix: "jade";
+$tree: #{$clsPrefix}-tree;
+$tree-node-wrapper:#{$tree}-node-wrapper;
+$tree-node:#{$tree}-node;
+.#{$tree} {
+    font-size: 14px;
+    outline: none;
+
+    ul,li {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .#{$tree-node-wrapper} {
+        padding: 3px 0;
+    }
+
+    .#{$tree-node} {
+        position: relative;
+        display: flex;
+        border-radius: 0px;
+    }
+    
+}

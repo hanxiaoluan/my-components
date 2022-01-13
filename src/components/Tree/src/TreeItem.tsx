@@ -1,6 +1,8 @@
 import { defineComponent, inject, PropType } from 'vue'
 import { repeat } from '@/utils/repeat'
 import { treeInjectKey } from './Tree'
+import TreeItemSwitcher from './TreeItemSwitcher'
+import TreeItemContent from './TreeItemContent'
 import type { TmNode } from './types'
 
 export default defineComponent({
@@ -15,7 +17,7 @@ export default defineComponent({
 			required: true
 		}
 	},
-	setup(props) {
+	setup() {
 		const { indentRef } = inject(treeInjectKey)!
 
 		return {
@@ -29,7 +31,8 @@ export default defineComponent({
 			<div class={`${clsPrefix}-tree-node-wrapper`}>
 				<div class={`${clsPrefix}-tree-node`}>
 					{repeat(tmNode.level, <div class={`${clsPrefix}-tree-node-indent`} style={{ flex: `0 0 ${indent}px` }} />)}
-					<div>{tmNode.rawNode.label}</div>
+					<TreeItemSwitcher clsPrefix={clsPrefix} />
+					<TreeItemContent clsPrefix={clsPrefix} tmNode={tmNode} />
 				</div>
 			</div>
 		)

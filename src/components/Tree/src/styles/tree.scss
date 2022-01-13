@@ -2,6 +2,8 @@ $clsPrefix: "jade";
 $tree: #{$clsPrefix}-tree;
 $tree-node-wrapper:#{$tree}-node-wrapper;
 $tree-node:#{$tree}-node;
+$tree-switcher:#{$tree-node}-switcher;
+
 .#{$tree} {
     font-size: 14px;
     outline: none;
@@ -20,6 +22,24 @@ $tree-node:#{$tree}-node;
         position: relative;
         display: flex;
         border-radius: 0px;
+    }
+    .#{$tree-switcher} {
+        cursor: pointer;
+        display: inline-flex;
+        flex-shrink: 0;
+        height: 24px;
+        width: 24px;
+        align-items: center;
+        justify-content: center;
+        vertical-align: bottom;
+        &__icon {
+            position: relative;
+            height: 14px;
+            width: 14px;
+            display: flex;
+            font-size: 14px;
+            // color: red;
+        }
     }
     
 }

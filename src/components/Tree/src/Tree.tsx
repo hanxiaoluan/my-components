@@ -55,7 +55,8 @@ export default defineComponent({
 		console.log(mergedFlattenNodesRef.value)
 
 		provide(treeInjectKey, {
-			indentRef: toRef(props, 'indent')
+			indentRef: toRef(props, 'indent'),
+			getMergedExpandedKeys
 		})
 		return {
 			fattenNodes: mergedFlattenNodesRef,

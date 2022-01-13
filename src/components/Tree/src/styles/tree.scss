@@ -3,7 +3,7 @@ $tree: #{$clsPrefix}-tree;
 $tree-node-wrapper:#{$tree}-node-wrapper;
 $tree-node:#{$tree}-node;
 $tree-switcher:#{$tree-node}-switcher;
-
+$tree-content:#{$tree}-node-content;
 .#{$tree} {
     font-size: 14px;
     outline: none;
@@ -40,6 +40,19 @@ $tree-switcher:#{$tree-node}-switcher;
             font-size: 14px;
             // color: red;
         }
+        &--expanded {
+            transform: rotate(90deg);
+        }
     }
-    
+    .#{$tree-content} {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        min-height: 24px;
+        box-sizing: border-box;
+        line-height: 1.5;
+        vertical-align: bottom;
+        padding: 0 6px;
+    }
+
 }

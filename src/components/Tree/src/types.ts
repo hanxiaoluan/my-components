@@ -1,4 +1,4 @@
-import type { VNodeChild, Ref } from 'vue'
+import type { VNodeChild, Ref, ComputedRef } from 'vue'
 import type { TreeNode } from '@/treemate/types'
 export type Key = string | number
 
@@ -20,4 +20,5 @@ export type TmNode = TreeNode<TreeOption>
 
 export interface TreeInjection {
 	indentRef: Ref<number>
+	getMergedExpandedKeys: ComputedRef<Key[]>
 }

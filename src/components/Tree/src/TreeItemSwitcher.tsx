@@ -11,10 +11,12 @@ export default defineComponent({
 		onClick: Function as PropType<(e: MouseEvent) => void>
 	},
 	render() {
-		const { clsPrefix } = this
+		const { clsPrefix, expanded } = this
 
 		return (
-			<span class={[`${clsPrefix}-tree-node-switcher`]} onClick={this.onClick}>
+			<span
+				class={[`${clsPrefix}-tree-node-switcher`, expanded && `${clsPrefix}-tree-node-switcher--expanded`]}
+				onClick={this.onClick}>
 				<div class={`${clsPrefix}-tree-node-switcher__icon`}>
 					<SwitcherIcon />
 				</div>

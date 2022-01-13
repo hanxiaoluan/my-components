@@ -1,8 +1,9 @@
 import { defineComponent, inject, PropType } from 'vue'
-import { repeat } from '@/utils/repeat'
-import { treeInjectKey } from './Tree'
 import TreeItemSwitcher from './TreeItemSwitcher'
 import TreeItemContent from './TreeItemContent'
+import { repeat } from '@/utils/repeat'
+import { treeInjectKey } from './Tree'
+import { useMemo } from '@/utils/useMemo'
 import type { TmNode } from './types'
 
 export default defineComponent({
@@ -17,21 +18,22 @@ export default defineComponent({
 			required: true
 		}
 	},
-	setup() {
-		const { indentRef } = inject(treeInjectKey)!
+	setup(props) {
+		const { indentRef, getMergedExpandedKeys } = inject(treeInjectKey)!
 
 		return {
-			indent: indentRef
+			indent: indentRef,
+			expanded: useMemo(() => getMergedExpandedKeys.value.findIndex((key) => key === props.tmNode.key) > -1)
 		}
 	},
 	render() {
-		const { clsPrefix, tmNode, indent } = this
+		const { clsPrefix, tmNode, indent, expanded } = this
 
 		return (
 			<div class={`${clsPrefix}-tree-node-wrapper`}>
 				<div class={`${clsPrefix}-tree-node`}>
 					{repeat(tmNode.level, <div class={`${clsPrefix}-tree-node-indent`} style={{ flex: `0 0 ${indent}px` }} />)}
-					<TreeItemSwitcher clsPrefix={clsPrefix} />
+					<TreeItemSwitcher clsPrefix={clsPrefix} expanded={expanded} />
 					<TreeItemContent clsPrefix={clsPrefix} tmNode={tmNode} />
 				</div>
 			</div>

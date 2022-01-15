@@ -1,5 +1,7 @@
 $clsPrefix: "jade";
 $tree: #{$clsPrefix}-tree;
+$tree--block-node:#{$tree}--block-node;
+$tree--block-line:#{$tree}--block-line;
 $tree-node-wrapper:#{$tree}-node-wrapper;
 $tree-node:#{$tree}-node;
 $tree-switcher:#{$tree-node}-switcher;
@@ -54,5 +56,22 @@ $tree-content:#{$tree}-node-content;
         vertical-align: bottom;
         padding: 0 6px;
     }
+    &:not(.#{$tree--block-line}) {
+        .#{$tree-content}:hover {
+            background-color: #f3f3f5;
+        }
+    }
 
+}
+.#{tree--block-node} {
+    .#{tree-content} {
+        width: 100%;
+    }
+}
+.#{$tree--block-line} {
+    .#{$tree-node} {
+        &:not(.#{$tree-node}--disabled):hover {
+            background-color: #f3f3f5;
+        }
+    }
 }

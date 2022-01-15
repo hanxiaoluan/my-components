@@ -19,21 +19,27 @@ export default defineComponent({
 		}
 	},
 	setup(props) {
-		const { indentRef, getMergedExpandedKeys } = inject(treeInjectKey)!
+		const { indentRef, getMergedExpandedKeys, handleSwitcherClick } = inject(treeInjectKey)!
 
+		function onSwitcherClick() {
+			const { tmNode } = props
+			// TODO 需要判断remote的lazy load的情况
+			handleSwitcherClick(tmNode)
+		}
 		return {
 			indent: indentRef,
-			expanded: useMemo(() => getMergedExpandedKeys.value.findIndex((key) => key === props.tmNode.key) > -1)
+			expanded: useMemo(() => getMergedExpandedKeys.value.findIndex((key) => key === props.tmNode.key) > -1),
+			onSwitcherClick
 		}
 	},
 	render() {
-		const { clsPrefix, tmNode, indent, expanded } = this
+		const { clsPrefix, tmNode, indent, expanded, onSwitcherClick } = this
 
 		return (
 			<div class={`${clsPrefix}-tree-node-wrapper`}>
 				<div class={`${clsPrefix}-tree-node`}>
 					{repeat(tmNode.level, <div class={`${clsPrefix}-tree-node-indent`} style={{ flex: `0 0 ${indent}px` }} />)}
-					<TreeItemSwitcher clsPrefix={clsPrefix} expanded={expanded} />
+					<TreeItemSwitcher clsPrefix={clsPrefix} expanded={expanded} onClick={onSwitcherClick} />
 					<TreeItemContent clsPrefix={clsPrefix} tmNode={tmNode} />
 				</div>
 			</div>

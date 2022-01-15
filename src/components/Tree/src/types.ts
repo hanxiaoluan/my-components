@@ -21,4 +21,5 @@ export type TmNode = TreeNode<TreeOption>
 export interface TreeInjection {
 	indentRef: Ref<number>
 	getMergedExpandedKeys: ComputedRef<Key[]>
+	handleSwitcherClick: (tmNode: TmNode) => void
 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-dupe-class-members */
 import { flatten } from './flatten'
 import { getChildren } from './utils'
 import type { RawNode, TreeMateOptions, TreeMateType, TreeNode, Key, LevelTreeNodeMap, TreeNodeMap } from './types'
@@ -20,6 +21,14 @@ export class TreeMate<R = RawNode> implements TreeMateType<R> {
 	}
 	getFlattenedNodes(expandedKeys?: Key[]) {
 		return flatten(this.treeNodes, expandedKeys)
+	}
+
+	getNode<T>(key: Key | null | undefined): T extends null | undefined ? null : TreeNode<R>
+	getNode(key: Key | null | undefined): TreeNode<R> | null {
+		if (key === null || key === undefined) return null
+		const treeNode = this.treeNodeMap.get(key)
+		if (treeNode) return treeNode
+		return null
 	}
 }
 // class TreeNodes<T {

@@ -1,4 +1,4 @@
-import { computed, defineComponent, PropType, toRef, provide } from 'vue'
+import { computed, defineComponent, PropType, toRef, provide, ref } from 'vue'
 import { TreeMate } from '@/treemate/index'
 import { useMergedState } from '@/utils/useMergedState'
 import TreeItem from './TreeItem'
@@ -29,7 +29,10 @@ const basicProps = {
 	indent: {
 		type: Number,
 		default: 16
-	}
+	},
+	blockLine: Boolean, // 节点整行撑开
+	blockNode: Boolean, // 节点名称整行撑开
+	disabled: Boolean
 }
 
 function createNode(tmNode: TmNode, clsPrefix: string): VNode {
@@ -42,7 +45,7 @@ export default defineComponent({
 		const clsPrefix = 'jade'
 		const getTreeMate = computed(() => new TreeMate(props.data))
 		console.log(getTreeMate.value)
-		const uncontrolledExpandedKeysRef = toRef(props, 'defaultExpandedKeys')
+		const uncontrolledExpandedKeysRef = ref(props.defaultExpandedKeys)
 		const controlledExpandedKeysRef = toRef(props, 'expandedKeys')
 		const getMergedExpandedKeys = useMergedState(controlledExpandedKeysRef, uncontrolledExpandedKeysRef) // 默认肯定是空数组
 
@@ -54,9 +57,37 @@ export default defineComponent({
 
 		console.log(mergedFlattenNodesRef.value)
 
+		function doUpdateExpandedKeys(value: Key[]): void {
+			// TODO 需要加上updateKeys的hook函数 before
+			uncontrolledExpandedKeysRef.value = value
+			console.log(value, uncontrolledExpandedKeysRef.value, getMergedExpandedKeys.value)
+		}
+		function toggleExpand(key: string | number) {
+			const { value: mergedExpandedKeys } = getMergedExpandedKeys
+			const index = mergedExpandedKeys.findIndex((expandedKey) => expandedKey === key)
+			// 通过位运算来判断index
+			if (~index) {
+				const newExpandedKeys = Array.from(mergedExpandedKeys)
+				newExpandedKeys.splice(index, 1)
+				doUpdateExpandedKeys(newExpandedKeys)
+			} else {
+				const nodeToBeExpanded = getTreeMate.value.getNode(key)
+				// TODO 需要判断leaf节点 remote模式下
+				if (!nodeToBeExpanded) {
+					return
+				}
+				console.log(key)
+				doUpdateExpandedKeys(mergedExpandedKeys.concat(key))
+			}
+		}
+		function handleSwitcherClick(tmNode: TmNode): void {
+			if (props.disabled) return
+			toggleExpand(tmNode.key)
+		}
 		provide(treeInjectKey, {
 			indentRef: toRef(props, 'indent'),
-			getMergedExpandedKeys
+			getMergedExpandedKeys,
+			handleSwitcherClick
 		})
 		return {
 			fattenNodes: mergedFlattenNodesRef,
@@ -64,7 +95,12 @@ export default defineComponent({
 		}
 	},
 	render() {
-		const treeClass = [`${this.clsPrefix}-tree`]
+		const { blockLine, blockNode, clsPrefix } = this
+		const treeClass = [
+			`${clsPrefix}-tree`,
+			(blockLine || blockNode) && `${clsPrefix}-tree--block-node`,
+			blockLine && `${clsPrefix}-tree--block-line`
+		]
 		// TODO 虚拟滚动的判断
 		return <div class={treeClass}>{this.fattenNodes.map((tmNode) => createNode(tmNode, this.clsPrefix))}</div>
 	}

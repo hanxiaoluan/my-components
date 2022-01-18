@@ -63,7 +63,7 @@ $tree-content:#{$tree}-node-content;
         .#{$tree-content}:hover {
             background-color: #f3f3f5;
         }
-        &--selected {
+        .#{$tree-node}--selected {
             .#{$tree-content} {
                 background-color: rgba(24, 160, 88, 0.1);
             }

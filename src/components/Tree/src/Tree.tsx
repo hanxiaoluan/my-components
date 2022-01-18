@@ -21,8 +21,14 @@ const basicProps = {
 		type: String,
 		default: 'children'
 	},
+	selectable: Boolean,
 	expandedKeys: Array as PropType<Array<Key>>,
 	defaultExpandedKeys: {
+		type: Array as PropType<Array<Key>>,
+		default: () => []
+	},
+	selectedKeys: Array as PropType<Array<Key>>,
+	defaultSelectedKeys: {
 		type: Array as PropType<Array<Key>>,
 		default: () => []
 	},
@@ -48,7 +54,9 @@ export default defineComponent({
 		const uncontrolledExpandedKeysRef = ref(props.defaultExpandedKeys)
 		const controlledExpandedKeysRef = toRef(props, 'expandedKeys')
 		const getMergedExpandedKeys = useMergedState(controlledExpandedKeysRef, uncontrolledExpandedKeysRef) // 默认肯定是空数组
-
+		const controlledSelectedKeysRef = toRef(props, 'selectedKeys')
+		const unControlledSelecetedKeysRef = ref(props.defaultSelectedKeys || props.selectedKeys)
+		const getMergedSelectedKeys = useMergedState(controlledSelectedKeysRef, unControlledSelecetedKeysRef)
 		const getFlattenNodes = computed(() => getTreeMate.value.getFlattenedNodes(getMergedExpandedKeys.value))
 
 		const mergedFlattenNodesRef = computed(() => {
@@ -62,6 +70,12 @@ export default defineComponent({
 			uncontrolledExpandedKeysRef.value = value
 			console.log(value, uncontrolledExpandedKeysRef.value, getMergedExpandedKeys.value)
 		}
+		function doUpdateSelectedKeys(value: Key[]): void {
+			// TODO 需要加上updateKeys的hook函数 before
+			unControlledSelecetedKeysRef.value = value
+			console.log(getMergedSelectedKeys.value)
+		}
+
 		function toggleExpand(key: string | number) {
 			const { value: mergedExpandedKeys } = getMergedExpandedKeys
 			const index = mergedExpandedKeys.findIndex((expandedKey) => expandedKey === key)
@@ -84,10 +98,26 @@ export default defineComponent({
 			if (props.disabled) return
 			toggleExpand(tmNode.key)
 		}
+		function handleSelect(tmNode: TmNode): void {
+			// TODO 需要加上node的disabled的属性
+			if (props.disabled) return
+			// TODO 需要进行多选判断
+
+			const selectedKeys = getMergedSelectedKeys.value
+			if (selectedKeys.includes(tmNode.key)) {
+				doUpdateSelectedKeys([])
+			} else {
+				doUpdateSelectedKeys([tmNode.key])
+			}
+		}
+
 		provide(treeInjectKey, {
+			blockLineRef: toRef(props, 'blockLine'),
 			indentRef: toRef(props, 'indent'),
 			getMergedExpandedKeys,
-			handleSwitcherClick
+			handleSwitcherClick,
+			getMergedSelectedKeys,
+			handleSelect
 		})
 		return {
 			fattenNodes: mergedFlattenNodesRef,

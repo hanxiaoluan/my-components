@@ -22,4 +22,7 @@ export interface TreeInjection {
 	indentRef: Ref<number>
 	getMergedExpandedKeys: ComputedRef<Key[]>
 	handleSwitcherClick: (tmNode: TmNode) => void
+	blockLineRef: Ref<boolean>
+	handleSelect: (tmNode: TmNode) => void
+	getMergedSelectedKeys: ComputedRef<Key[]>
 }

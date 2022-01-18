@@ -45,6 +45,9 @@ $tree-content:#{$tree}-node-content;
         &--expanded {
             transform: rotate(90deg);
         }
+        &--hide {
+            visibility: hidden;
+        }
     }
     .#{$tree-content} {
         position: relative;
@@ -60,6 +63,11 @@ $tree-content:#{$tree}-node-content;
         .#{$tree-content}:hover {
             background-color: #f3f3f5;
         }
+        &--selected {
+            .#{$tree-content} {
+                background-color: rgba(24, 160, 88, 0.1);
+            }
+        }
     }
 
 }
@@ -72,6 +80,9 @@ $tree-content:#{$tree}-node-content;
     .#{$tree-node} {
         &:not(.#{$tree-node}--disabled):hover {
             background-color: #f3f3f5;
+        }
+        &--selected {
+            background-color: rgba(24, 160, 88, 0.1);
         }
     }
 }

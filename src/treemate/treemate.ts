@@ -1,6 +1,6 @@
 /* eslint-disable no-dupe-class-members */
 import { flatten } from './flatten'
-import { getChildren } from './utils'
+import { getChildren, isLeaf } from './utils'
 import type { RawNode, TreeMateOptions, TreeMateType, TreeNode, Key, LevelTreeNodeMap, TreeNodeMap } from './types'
 
 export class TreeMate<R = RawNode> implements TreeMateType<R> {
@@ -15,6 +15,9 @@ export class TreeMate<R = RawNode> implements TreeMateType<R> {
 		const nodeProto = {
 			get key() {
 				return (this as any).rawNode.key
+			},
+			get isLeaf() {
+				return isLeaf((this as any).rawNode)
 			}
 		}
 		this.treeNodes = createTreeNodes(rawNodes, this.treeNodeMap, this.levelTreeNodeMap, nodeProto, getChildren)
@@ -75,3 +78,64 @@ function createTreeNodes<R = RawNode>(
 
 	return treeNodes
 }
+
+// class TreeNodeProto<R = RawNode> {
+// 	rawNode: R
+// 	constructor(rawNode: R) {
+// 		this.rawNode = rawNode
+// 	}
+// 	get key() {
+// 		return (this as any).rawNode.key
+// 	}
+// 	get isLeaf() {
+// 		return isLeaf((this as any).rawNode)
+// 	}
+// }
+
+// class TreeNode<R = RawNode> extends TreeNodeProto<R> {
+// 	rawNode: R
+// 	siblings: Array<TreeNode<R>>
+// 	level: number
+// 	index: number
+// 	isFirstChild: boolean
+// 	isLastChild: boolean
+// 	parent: TreeNode<R> | null = null
+// 	constructor(
+// 		rawNode: R,
+// 		treeNodes: Array<TreeNode<R>>,
+// 		treeNodeMap: TreeNodeMap<R>,
+// 		levelTreeNodeMap: LevelTreeNodeMap<R>,
+// 		isFirstChild: boolean,
+// 		isLastChild: boolean,
+// 		index: number,
+// 		parent: TreeNode<R> | null = null,
+// 		level = 0
+// 	) {
+// 		super(rawNode)
+// 		this.rawNode = rawNode
+// 		this.siblings = treeNodes
+// 		this.level = level
+// 		this.index = index
+// 		this.isFirstChild = isFirstChild
+// 		this.isLastChild = isLastChild
+// 		this.parent = parent
+// 		const rawChildren = getChildren(rawNode)
+// 		if (Array.isArray(rawChildren)) {
+// 			this.children = createTreeNodes<R>(
+// 				rawChildren,
+// 				treeNodeMap,
+// 				levelTreeNodeMap,
+// 				nodeProto,
+// 				getChildren,
+// 				treeNode,
+// 				level + 1
+// 			)
+// 		}
+// 		treeNodes.push(this as any)
+// 		treeNodeMap.set(this.key, this as any)
+// 		!levelTreeNodeMap.has(level) && levelTreeNodeMap.set(level, [])
+// 		levelTreeNodeMap.get(level)?.push(this as any)
+// 	}
+// }
+
+// class TreeNodeCon<R = RawNode> extends TreeNodeProto<R> {}

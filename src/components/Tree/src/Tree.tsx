@@ -22,6 +22,7 @@ const basicProps = {
 		default: 'children'
 	},
 	selectable: Boolean,
+	multiple: Boolean,
 	expandedKeys: Array as PropType<Array<Key>>,
 	defaultExpandedKeys: {
 		type: Array as PropType<Array<Key>>,
@@ -68,12 +69,10 @@ export default defineComponent({
 		function doUpdateExpandedKeys(value: Key[]): void {
 			// TODO 需要加上updateKeys的hook函数 before
 			uncontrolledExpandedKeysRef.value = value
-			console.log(value, uncontrolledExpandedKeysRef.value, getMergedExpandedKeys.value)
 		}
 		function doUpdateSelectedKeys(value: Key[]): void {
 			// TODO 需要加上updateKeys的hook函数 before
 			unControlledSelecetedKeysRef.value = value
-			console.log(getMergedSelectedKeys.value)
 		}
 
 		function toggleExpand(key: string | number) {
@@ -90,7 +89,7 @@ export default defineComponent({
 				if (!nodeToBeExpanded) {
 					return
 				}
-				console.log(key)
+
 				doUpdateExpandedKeys(mergedExpandedKeys.concat(key))
 			}
 		}
@@ -103,11 +102,21 @@ export default defineComponent({
 			if (props.disabled) return
 			// TODO 需要进行多选判断
 
-			const selectedKeys = getMergedSelectedKeys.value
-			if (selectedKeys.includes(tmNode.key)) {
-				doUpdateSelectedKeys([])
+			if (props.multiple) {
+				const selectedKeys = Array.from(getMergedSelectedKeys.value)
+				const index = selectedKeys.findIndex((key) => key === tmNode.key)
+				if (~index) {
+					selectedKeys.splice(index, 1)
+				} else {
+					selectedKeys.push(tmNode.key)
+				}
 			} else {
-				doUpdateSelectedKeys([tmNode.key])
+				const selectedKeys = getMergedSelectedKeys.value
+				if (selectedKeys.includes(tmNode.key)) {
+					doUpdateSelectedKeys([])
+				} else {
+					doUpdateSelectedKeys([tmNode.key])
+				}
 			}
 		}
 
